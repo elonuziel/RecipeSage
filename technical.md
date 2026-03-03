@@ -49,3 +49,25 @@ Mirroring the existing `/print/shoppingList/:id` route.
 
 ## Recommendation
 **Approach 1 (Client-Side "Copy to Clipboard" or "Share")** is highly recommended. It avoids hitting the backend with extra requests, directly uses the data already loaded on the page, and allows mobile users to easily paste the list into WhatsApp or Notes apps. For mobile deployments, injecting Capacitor's `Share` plugin (`@capacitor/share`) is the most native-feeling way to share plain text.
+
+---
+
+# Follow-up: Increase/Decrease Quantity to Nearest Whole Number
+
+## Is it possible?
+Yes, it is definitely possible. 
+
+## How Shopping List Items Store Quantities
+Currently, `ShoppingListItem` records in the database do **not** have separate columns for quantity (e.g., `1`), unit (`cup`), and ingredient name (`flour`). The entire text is stored as a single `title` string (e.g., `"1 1/2 cups flour"`). 
+
+## How Quantity Manipulation Can Work
+Despite being a single string, RecipeSage already contains an advanced ingredient parsing engine located in `packages/util/shared/src/parsers.ts`. This engine is currently used to scale recipes (e.g., doubling a recipe).
+1. **The Parsing Logic**: The app uses Regular Expressions (`measurementRegexp`) to identify the fraction or decimal portion of the string, and a library called `fraction.js` to parse substrings like `"1 1/2"` into workable mathematical fractions.
+2. **Rounding Logic**: A developer can adapt the existing `parseIngredients(ingredients, scale)` logic to instead find the extracted `FractionJS` object, and apply a rounding function (like `Math.ceil()` for increasing to the nearest whole number, or `Math.floor()` for decreasing).
+3. **Updating the List**: 
+   - Add "+/-" buttons or "Round Up" / "Round Down" buttons to the `ShoppingListItemComponent` UI.
+   - When clicked, the frontend runs this string manipulation, updates the text (e.g. from `"1 1/2 cups flour"` to `"2 cups flour"`), and sends a standard update request to the backend (`updateShoppingListItems.mutate`) to save the new string.
+
+## Complications
+- **Ranges**: Some ingredients might be written as `"1 - 2 cups flour"`. The parser handles this, but the logic would need to decide whether to round both numbers or handle it gracefully.
+- **Missing Units/Quantities**: If the user just adds "Apples" without a number, the rounding function should detect that there is no measurement and do nothing.

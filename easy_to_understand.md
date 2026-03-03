@@ -27,3 +27,23 @@ It is a simple feature, but the developer will need to keep a few minor details 
 
 ## Summary
 There are no major roadblocks. It's a standard feature that would only take a developer a short amount of time to put together!
+
+---
+
+# Follow-up: Increase/Decrease Quantity to Nearest Whole Number
+
+## Is it possible?
+**Yes!** It is very possible to add a button to round your ingredients up or down to the nearest whole number.
+
+## How it would work
+When you add an item like "1 1/2 cups flour" to your shopping list, the app just sees it as one long piece of text. However, the app *already* has a smart "reading" tool built-in that it uses to scale recipes (like when you push a button to double a recipe). 
+
+A developer can reuse this exact same smart tool to:
+1. "Read" the text and find the number `1 1/2`.
+2. Do the math to round it up to `2` or down to `1`.
+3. Rewrite the text to say `2 cups flour` and save it to your list.
+
+## Potential Complications
+- **Ranges of Numbers:** If an item says "1 to 2 cups flour", the app will have to be programmed to know whether to round both numbers or just leave that item alone.
+- **No Numbers:** If an item just says "Apples" without a number, the button should just ignore it instead of causing an error. 
+Both of these are easily solvable by the developer!
