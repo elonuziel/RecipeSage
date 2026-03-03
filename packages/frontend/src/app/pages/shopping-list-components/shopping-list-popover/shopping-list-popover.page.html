@@ -101,6 +101,16 @@
   </ion-button>
 
   <ion-button
+    (click)="copyToClipboard()"
+    expand="block"
+    size="small"
+    class="ion-margin"
+  >
+    <ion-icon name="copy" slot="start"></ion-icon>
+    {{ "pages.shoppingListPopover.copyToClipboard" | translate }}
+  </ion-button>
+
+  <ion-button
     [disabled]="!isOwner"
     (click)="updateList()"
     expand="block"

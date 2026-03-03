@@ -27,6 +27,24 @@
       }
     </div>
   </ion-checkbox>
+  @if (hasLeadingQuantity()) {
+    <ion-button
+      slot="end"
+      fill="clear"
+      color="medium"
+      (click)="adjustQuantity(-1)"
+    >
+      <ion-icon slot="icon-only" name="remove"></ion-icon>
+    </ion-button>
+    <ion-button
+      slot="end"
+      fill="clear"
+      color="medium"
+      (click)="adjustQuantity(1)"
+    >
+      <ion-icon slot="icon-only" name="add"></ion-icon>
+    </ion-button>
+  }
   @if (showDeleteButton) {
     <ion-button
       slot="end"

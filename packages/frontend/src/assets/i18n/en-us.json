@@ -947,6 +947,8 @@
   "pages.shoppingListPopover.preferDelete": "Delete Upon Completion",
   "pages.shoppingListPopover.actions.title": "Actions",
   "pages.shoppingListPopover.print": "Print",
+  "pages.shoppingListPopover.copyToClipboard": "Copy to Clipboard",
+  "pages.shoppingListPopover.copyToClipboard.success": "Copied to clipboard!",
   "pages.shoppingListPopover.update": "Manage List",
   "pages.shoppingListPopover.categoryOrder": "Change Category Order",
   "pages.shoppingListPopover.dangerZone.title": "Danger Zone",

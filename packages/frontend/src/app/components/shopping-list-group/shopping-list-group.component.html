@@ -8,6 +8,7 @@
     [ownerName]="showAddedBy && group.items[0].owner?.name"
     (completeToggle)="completeToggle.emit(group.items)"
     (recategorize)="recategorize.emit([group.items, $event])"
+    (titleChange)="titleChange.emit([group.items[0], $event])"
   ></shopping-list-item>
 }
 @if (group.items.length > 1) {
@@ -59,6 +60,7 @@
                 [ownerName]="showAddedBy && item.owner?.name"
                 (completeToggle)="completeToggle.emit([item])"
                 (recategorize)="recategorize.emit([[item], $event])"
+                (titleChange)="titleChange.emit([item, $event])"
               ></shopping-list-item>
             }
           </ion-col>
