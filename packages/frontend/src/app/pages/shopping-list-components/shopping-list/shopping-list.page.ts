@@ -243,6 +243,33 @@ export class ShoppingListPage {
     this.processList(shoppingListItems, shoppingList.categoryOrder);
   }
 
+  async updateItemTitle(
+    item: ShoppingListItemSummary,
+    newTitle: string,
+  ): Promise<void> {
+    if (!this.shoppingList) return;
+
+    const loading = this.loadingService.start();
+
+    const response = await this.trpcService.handle(
+      this.trpcService.trpc.shoppingLists.updateShoppingListItems.mutate({
+        shoppingListId: this.shoppingListId,
+        items: [{ id: item.id, title: newTitle }],
+      }),
+    );
+    if (!response) {
+      loading.dismiss();
+      return;
+    }
+
+    if (this.reference !== response.reference) {
+      this.reference = response.reference;
+      await this.loadList();
+    }
+
+    loading.dismiss();
+  }
+
   async completeItems(items: ShoppingListItemSummary[], completed: boolean) {
     if (!this.shoppingList) return;
 

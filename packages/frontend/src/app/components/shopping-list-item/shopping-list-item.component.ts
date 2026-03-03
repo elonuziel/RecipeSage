@@ -7,6 +7,7 @@ import {
   ViewChild,
 } from "@angular/core";
 
+import fractionjs from "fraction.js";
 import { UtilService } from "~/services/util.service";
 import { SHARED_UI_IMPORTS } from "../../providers/shared-ui.provider";
 import { TranslateService } from "@ngx-translate/core";
@@ -61,6 +62,7 @@ export class ShoppingListItemComponent {
   @Output() completeToggle = new EventEmitter<null>();
   @Output() recategorize = new EventEmitter<string>();
   @Output() deleteClick = new EventEmitter<null>();
+  @Output() titleChange = new EventEmitter<string>();
 
   @ViewChild("moveToPopover") moveToPopover!: HTMLIonPopoverElement;
 
@@ -99,6 +101,51 @@ export class ShoppingListItemComponent {
 
   onComplete() {
     this.completeToggle.emit();
+  }
+
+  // Regex that matches a leading numeric quantity (whole, fraction, or mixed number)
+  private readonly leadingQuantityRegex =
+    /^(\d+\s+\d+\/\d+|\d+\/\d+|\d+(?:\.\d+)?)/;
+
+  hasLeadingQuantity(): boolean {
+    return this.leadingQuantityRegex.test(this.title);
+  }
+
+  adjustQuantity(delta: number): void {
+    const match = this.title.match(this.leadingQuantityRegex);
+    if (!match) return;
+
+    const matchedStr = match[0];
+    let frac: ReturnType<typeof fractionjs>;
+    try {
+      // Handle mixed-number format "2 1/4" which fractionjs cannot parse directly
+      const mixedMatch = matchedStr.match(/^(\d+)\s+(\d+)\/(\d+)$/);
+      if (mixedMatch) {
+        const whole = parseInt(mixedMatch[1], 10);
+        const num = parseInt(mixedMatch[2], 10);
+        const den = parseInt(mixedMatch[3], 10);
+        frac = fractionjs(whole * den + num, den);
+      } else {
+        frac = fractionjs(matchedStr.trim());
+      }
+    } catch (_e) {
+      return;
+    }
+
+    const denom = frac.d;
+    const step = fractionjs(1, denom);
+    const newFrac = delta > 0 ? frac.add(step) : frac.sub(step);
+
+    if (newFrac.valueOf() < 0) return;
+
+    let newValue: string;
+    if (newFrac.d === 1) {
+      newValue = String(newFrac.n);
+    } else {
+      newValue = newFrac.toFraction(true);
+    }
+
+    this.titleChange.emit(newValue + this.title.slice(matchedStr.length));
   }
 
   formatItemCreationDate(date: string | Date) {

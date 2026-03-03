@@ -34,6 +34,7 @@ export class ShoppingListGroupComponent {
   showAddedBy!: boolean;
   @Output() completeToggle = new EventEmitter<any>();
   @Output() recategorize = new EventEmitter<[any[], string]>();
+  @Output() titleChange = new EventEmitter<[any, string]>();
 
   constructor() {}
 }

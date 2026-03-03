@@ -4,6 +4,7 @@ import {
   NavController,
   PopoverController,
   ModalController,
+  ToastController,
 } from "@ionic/angular";
 import { TranslateService } from "@ngx-translate/core";
 
@@ -40,6 +41,7 @@ export class ShoppingListPopoverPage {
   private popoverCtrl = inject(PopoverController);
   private alertCtrl = inject(AlertController);
   private modalCtrl = inject(ModalController);
+  private toastCtrl = inject(ToastController);
 
   @Input({
     required: true,
@@ -82,6 +84,30 @@ export class ShoppingListPopoverPage {
           this.preferences[GlobalPreferenceKey.Language] || undefined,
       }),
     );
+  }
+
+  async copyToClipboard(): Promise<void> {
+    const activeItems = this.shoppingListItems.filter(
+      (item) => !item.completed,
+    );
+    const text = activeItems.map((item) => item.title).join("\n");
+
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch (_e) {
+      return;
+    }
+
+    const message = await this.translate
+      .get("pages.shoppingListPopover.copyToClipboard.success")
+      .toPromise();
+    const toast = await this.toastCtrl.create({
+      message,
+      duration: 2000,
+    });
+    toast.present();
+
+    this.dismiss();
   }
 
   async removeAllItems() {

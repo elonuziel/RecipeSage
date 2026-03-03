@@ -68,6 +68,7 @@
                       "
                       (completeToggle)="completeItems($event, true)"
                       (recategorize)="recategorizeItems($event[0], $event[1])"
+                      (titleChange)="updateItemTitle($event[0], $event[1])"
                     ></shopping-list-group>
                   </div>
                 }
@@ -98,6 +99,7 @@
               "
               (completeToggle)="completeItems($event, true)"
               (recategorize)="recategorizeItems($event[0], $event[1])"
+              (titleChange)="updateItemTitle($event[0], $event[1])"
             ></shopping-list-group>
           </div>
         }
@@ -152,6 +154,7 @@
                       "
                       (completeToggle)="completeItems([item], true)"
                       (recategorize)="recategorizeItems([item], $event)"
+                      (titleChange)="updateItemTitle(item, $event)"
                     ></shopping-list-item>
                   </div>
                 }
@@ -189,6 +192,7 @@
               "
               (completeToggle)="completeItems([item], true)"
               (recategorize)="recategorizeItems([item], $event)"
+              (titleChange)="updateItemTitle(item, $event)"
             ></shopping-list-item>
           </div>
         }
