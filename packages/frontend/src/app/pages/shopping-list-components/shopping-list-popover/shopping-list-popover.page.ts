@@ -92,7 +92,11 @@ export class ShoppingListPopoverPage {
     );
     const text = activeItems.map((item) => item.title).join("\n");
 
-    await navigator.clipboard.writeText(text);
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch (_e) {
+      return;
+    }
 
     const message = await this.translate
       .get("pages.shoppingListPopover.copyToClipboard.success")

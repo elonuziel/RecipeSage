@@ -257,7 +257,10 @@ export class ShoppingListPage {
         items: [{ id: item.id, title: newTitle }],
       }),
     );
-    if (!response) return;
+    if (!response) {
+      loading.dismiss();
+      return;
+    }
 
     if (this.reference !== response.reference) {
       this.reference = response.reference;
